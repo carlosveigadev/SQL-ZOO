@@ -89,10 +89,73 @@ WHERE movie.id IN (SELECT movieid FROM casting
                                       FROM actor
                                       WHERE name='Julie Andrews'))`
 
-- 13 
+- 13 Obtain a list, in alphabetical order, of actors who've had at least 15 starring roles.
 
-``
 
-- 14
+`SELECT name
+FROM actor JOIN casting ON casting.actorid = actor.id
+GROUP BY name
+HAVING SUM(CASE ord WHEN 1 THEN 1 ELSE 0 END)>=15
+ORDER BY name`
 
-``
+- 14 List the films released in the year 1978 ordered by the number of actors in the cast, then by title.
+
+`SELECT title, COUNT(actorid)
+FROM movie JOIN casting ON movie.id = casting.movieid
+WHERE yr = 1978
+GROUP BY title
+ORDER BY COUNT(actorid) DESC, title ASC
+`
+
+- 15 List all the people who have worked with 'Art Garfunkel'.
+
+`SELECT name
+FROM actor JOIN casting ON casting.actorid = actor.id
+WHERE movieid IN (SELECT movieid
+                  FROM casting
+                  WHERE actorid = (SELECT id
+                                   FROM actor
+                                   WHERE name = 'Art Garfunkel')) AND name <> 'Art Garfunkel'`
+
+## QUIZ
+
+- 1 
+  
+`SELECT name
+  FROM actor INNER JOIN movie ON actor.id = director
+ WHERE gross < budget`
+- 2 
+
+`SELECT *
+  FROM actor JOIN casting ON actor.id = actorid
+  JOIN movie ON movie.id = movieid`
+
+- 3
+
+`SELECT name, COUNT(movieid)
+  FROM casting JOIN actor ON actorid=actor.id
+ WHERE name LIKE 'John %'
+ GROUP BY name ORDER BY 2 DESC` 
+- 4
+
+`Table-B
+"Crocodile" Dundee
+Crocodile Dundee in Los Angeles
+Flipper
+Lightning Jack`
+- 5
+
+`SELECT name
+  FROM movie JOIN casting ON movie.id = movieid
+  JOIN actor ON actor.id = actorid
+WHERE ord = 1 AND director = 351`
+- 6
+
+`link the director column in movies with the primary key in actor
+connect the primary keys of movie and actor via the casting table`
+- 7
+
+`Table-B
+A Bronx Tale	1993
+Bang the Drum Slowly	1973
+Limitless	2011`
